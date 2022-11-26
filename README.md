@@ -18,3 +18,6 @@ F= -sqrt(1 - x ** 2) + arcsin(x)
 
 ## Lab 5 - Task
 Euler's Explicit Method 
+
+## Lab 6 - Task
+Euler's implicit method for a system of differential equations
