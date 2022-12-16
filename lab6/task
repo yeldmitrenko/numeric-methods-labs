@@ -1,0 +1,67 @@
+![image](https://user-images.githubusercontent.com/74879089/208064904-06c873da-3b0a-4422-be29-3f6195522504.png)
+
+C1 = 0.5 * 10 ** -3 F
+C2 = 0.7 * 10 ** -3 F
+C3 = 0.3 * 10 ** -3 F
+R1 = 70 Ohm
+R2 = 3 Ohm
+R3 = 7 Ohm
+a = 0.02 s
+
+du/dt = i/C
+
+U = I/C
+
+
+System of differential equations relative to dynamic RCL-elements:
+Active elements: C1 C2 C3
+
+{
+   du[C1] / dt = i1 / C1
+   du[C2] / dt = i2 / C2
+   du[C3] / dt = i2 / C3
+}
+
+
+Node: i1 = i2 + i3
+
+Circuits:
+1. u1 - u[R1] - u[C1] - u[R3] = 0
+2. u[R3] - u[R2] - u[C2] - u[C3] = 0
+
+Unknown: i1, i2, i3
+
+According to Ohm's law, we write down the voltage values for active resistances:
+U[R1] = i1 * R1
+U[R2] = i2 * R2
+U[R3] = i3 * R3
+
+Substitute the values of the resistance voltages into the circuit equation:
+1. u1 - i1 * R1 - u[C1] - i1 * R3 + i2 * R3 = 0
+2. i1 * R3 - i2 * R3 - i2 * R2 - u[C2] - u[C3] = 0
+
+((u1 * R3 + i2 * R3 ** 2 - u[C1] * R3 - i2 * (R2 + R3) * (R1 + R3)) / (R1 + R3)) - u[C2] - u[C3] = 0
+
+i2 * (R3 ** 2 - (R2 + R3) * (R1 + R3)) + u1 * R3 - u[C1] * R3 = (u[C2] + u[C3]) * (R1 + R3)
+
+The result is a system of equations with two unknowns:
+i2 = ((u[C2] - u[C3]) * (R1 + R3) - u1 * R3 + u[C1] * R3)) / (R3 ** 2 - (R2 + R3) * (R1 + R3))
+
+i1 = ( u1 - u[C1] + R3 * ((u[C1] + u[C2]) * (R1 + R3) * R3 * (u[C1] - u1)) / (R3 ** 2 - (R2 + R3) * (R1 + R3))) / (R1 + R3)
+
+The result system:
+
+{
+   du[C1] / dt = ( u1 - u[C1] + R3 * ((u[C1] + u[C2]) * (R1 + R3) * R3 * (u[C1] - u1)) / (R3 ** 2 - (R2 + R3) * (R1 + R3))) / (C1 * (R1 + R3)) = A
+   du[C2] / dt = ((u[C2] - u[C3]) * (R1 + R3) - u1 * R3 + u[C1] * R3)) / (C2 * (R3 ** 2 - (R2 + R3) * (R1 + R3))) = B
+   du[C3] / dt = ((u[C2] - u[C3]) * (R1 + R3) - u1 * R3 + u[C1] * R3)) / (C3 * (R3 ** 2 - (R2 + R3) * (R1 + R3))) = C
+}
+
+Output voltage: u2 = u[C3]
+
+Euler's implicit method for a system of differential equations:
+{
+   u[C1_old] + dt(A) - u[C1] = 0
+   u[C2_old] + dt(B) - u[C2] = 0
+   u[C3_old] + dt(C) - u[C3] = 0
+}
